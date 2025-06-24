@@ -117,45 +117,34 @@ public class ValidationServiceImpl implements UserService {
 
 				successRecords++;
 
-				// mapping string array of elements to user object
-				User user = getListOfUsersFromLine(fieldList);
-
-				//inserting each user object to the DB
+				//inserting each user fields to the DB
 				userRepository.insertUser(
-			            user.getId().getFName(),
-			            user.getId().getLName(),
-			            user.getId().getGender(),
-			            user.getId().getDateOfBirth(),
-			            user.getRecordNo(),
-			            user.getEducation(),
-			            user.getHouseNumber(),
-			            user.getAddress1(),
-			            user.getAddress2(),
-			            user.getCity(),
-			            user.getPincode(),
-			            user.getMobileNumber(),
-			            user.getCompany(),
-			            user.getMonthlySalary()
-			        );
+					fieldList[1], //fName
+					fieldList[2], //lName
+					fieldList[4], //gender
+					fieldList[3], //dateOfBirth
+					Integer.parseInt(fieldList[0]),//recordNo
+					fieldList[5], //education
+					Integer.parseInt(fieldList[6]),//houseNumber
+					fieldList[7], //address1
+					fieldList[8], //address2
+					fieldList[9], //city
+					Integer.parseInt(fieldList[10]),// pincode
+					fieldList[11], //mobileNumber
+					fieldList[12], //company
+					Double.parseDouble(fieldList[13]) //monthlySalary
+				);
 				
 			}
 			log.info("Failed Records :{}", failedRecords);
 			log.info("Success Records :{}", successRecords);
+
+			//returning User response object with failed and success record count
 			return UserResponse.builder().FailureRecord(failedRecords).SuccessRecord(successRecords).build();
 
 		} catch (IOException | CsvValidationException e) {
-			throw new RuntimeException("Failed to process file: " + e.getMessage(), e);
+			log.debug("Failed to process file");
 		}
 	}
 
-	// mapping string array of elements to user object
-	private User getListOfUsersFromLine(String[] fieldList) {
-		UserId userId = UserId.builder().fName(fieldList[1]).lName(fieldList[2]).gender(fieldList[4])
-				.dateOfBirth(fieldList[3]).build();
-
-		return User.builder().id(userId).recordNo(Integer.parseInt(fieldList[0])).education(fieldList[5])
-				.houseNumber(Integer.parseInt(fieldList[6])).address1(fieldList[7]).address2(fieldList[8])
-				.city(fieldList[9]).pincode(Integer.parseInt(fieldList[10])).mobileNumber(fieldList[11])
-				.company(fieldList[12]).monthlySalary(Double.parseDouble(fieldList[13])).build();
-	}
 }
