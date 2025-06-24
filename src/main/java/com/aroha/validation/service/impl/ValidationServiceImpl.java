@@ -117,23 +117,27 @@ public class ValidationServiceImpl implements UserService {
 
 				successRecords++;
 
-				//inserting each user fields to the DB
-				userRepository.insertUser(
-					fieldList[1], //fName
-					fieldList[2], //lName
-					fieldList[4], //gender
-					fieldList[3], //dateOfBirth
-					Integer.parseInt(fieldList[0]),//recordNo
-					fieldList[5], //education
-					Integer.parseInt(fieldList[6]),//houseNumber
-					fieldList[7], //address1
-					fieldList[8], //address2
-					fieldList[9], //city
-					Integer.parseInt(fieldList[10]),// pincode
-					fieldList[11], //mobileNumber
-					fieldList[12], //company
-					Double.parseDouble(fieldList[13]) //monthlySalary
-				);
+				try {
+					// inserting each user fields to the DB
+					userRepository.insertUser(fieldList[1], // fName
+							fieldList[2], // lName
+							fieldList[4], // gender
+							fieldList[3], // dateOfBirth
+							Integer.parseInt(fieldList[0]), // recordNo
+							fieldList[5], // education
+							Integer.parseInt(fieldList[6]), // houseNumber
+							fieldList[7], // address1
+							fieldList[8], // address2
+							fieldList[9], // city
+							Integer.parseInt(fieldList[10]), // pincode
+							fieldList[11], // mobileNumber
+							fieldList[12], // company
+							Double.parseDouble(fieldList[13]) // monthlySalary
+					);
+				} catch (DataIntegrityViolationException ex) {
+					// Duplicate or constraint violation
+					log.warn("Duplicate or failed record");
+				}
 				
 			}
 			log.info("Failed Records :{}", failedRecords);
