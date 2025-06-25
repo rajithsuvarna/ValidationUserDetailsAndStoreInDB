@@ -2,8 +2,10 @@ package com.aroha.validation.controller;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.aroha.validation.dto.UserResponse;
+import com.aroha.validation.dto.UserSalaryProjection;
+import com.aroha.validation.dto.UserSummaryDTO;
+import com.aroha.validation.entity.User;
 import com.aroha.validation.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -50,5 +55,26 @@ private UserService userService;
 		
 		log.info("TimeTaken :{}",duration.toMillis());
 		return ResponseEntity.ok(userResponse);
+	}
+	
+	//Get by first name and last name starts with given parameter
+	@GetMapping("/byname")
+	public ResponseEntity<List<UserSummaryDTO>> getFilteredUsers(@RequestParam String firstname,@RequestParam String lastname) {
+		List<UserSummaryDTO> resultlist=userService.getFilteredUsers(firstname,lastname);
+		return ResponseEntity.ok(resultlist);
+		
+	}
+	
+	//Get by date in between given parameter
+	@GetMapping("/bydate")
+	public ResponseEntity<List<User>> findUsersByDobBetween(@RequestParam String startDate,@RequestParam String endDate){
+		List<User> user=userService.findUsersByDobBetween(startDate,endDate);
+		return ResponseEntity.ok(user);
+	}
+	
+	//Get by salary greater than passed parameter salary
+	@GetMapping("/salary")
+	public List<UserSalaryProjection> getUsersWithSalary(@RequestParam double salary) {
+	    return userService.findBySalary(salary);
 	}
 }
