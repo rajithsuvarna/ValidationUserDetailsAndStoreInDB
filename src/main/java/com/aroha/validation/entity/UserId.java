@@ -1,6 +1,7 @@
 package com.aroha.validation.entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -26,5 +27,5 @@ public class UserId implements Serializable {
     private String gender;
 	
 	@Column(length = 20)
-    private String dateOfBirth; 
+    private LocalDate dateOfBirth; 
 }
